@@ -1,0 +1,44 @@
+<html>
+
+<head>
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.js"></script>
+  <script src="http://malsup.github.com/jquery.form.js"></script>
+  <script>
+    function slice(fileName) {
+      $.get("/slice/" + fileName)
+    }
+    $(document).ready(function () {
+      $("#uploadForm").ajaxForm({
+        url: '/upload',
+        dataType: 'json',
+        success: function (response) {
+          const fileName = response.fileName;
+          var sliceButton = $('<button/>',
+            {
+              text: 'Slice ' + fileName,
+
+              click: function () { slice(fileName) }
+            });
+          $("#buttons").append(sliceButton)
+        },
+        error: function (response, status, err) {
+          alert(JSON.parse(response.responseText).error)
+        }
+      })
+    })
+  </script>
+</head>
+
+<body>
+  <!-- Make a better display, add a slice progress bar -->
+  <form id="uploadForm" enctype="multipart/form-data" method="post">
+    <input type="text" name="title">
+    <input type="file" name="file">
+    <input type="submit" value="Upload">
+  </form>
+  <div id="buttons">
+
+  </div>
+</body>
+
+</html>
